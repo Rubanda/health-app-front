@@ -6,25 +6,62 @@ const inter = Inter({ subsets: ['latin'] })
 declare global {
   interface Window { ethereum: any; }
 }
-
+export type UserDocument = {
+  id: number
+  name: string
+  username: string
+  email: string
+  password: string
+  mqtt_server: string
+  phone: string
+  address: string
+  date_of_birth: any
+  blood_group: string
+  gender: string
+  avatar: string
+  height: number
+  weight: number
+  metaMaskAddress: string
+  created_at: string
+  updated_at: string
+  devices: {
+    id: number,
+    name: string,
+    description: string,
+    userId: 1,
+    mqttServerDeviceId: string,
+    type: string,
+    status: true,
+    createdAt: string,
+    updatedAt: string,
+  }[]
+  vital: {
+    id: number,
+    userId: number,
+    deviceId: number,
+    type: string,
+    payload: string,
+    createdAt: string,
+    updatedAt: string,
+  }[]
+}
 export async function getData(token: string) {
-  const user = await fetch("http://localhost:4000/api/user/me", {
+  const user = await fetch("https://health.masatafit.com/api/user/me", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer " + token,
     },
+    cache: 'no-store'
   })
-  const res = await user.json()
-  return [res]
+  const res= await user.json() as UserDocument
+  return res
 }
 
 export default async function Home() {
   const session: any = await getServerSession(authOptions)
   const token: string = session?.user?.token
-  const data = await getData(token)
-  // console.log('\n[data]...')
-  // console.log('\t[v]', data)
+  const data= await getData(token)
 
   return (
     <main className="mx-auto max-w-7xl px-4 mt-5 sm:px-6 lg:px-8">
@@ -39,10 +76,10 @@ export default async function Home() {
           } */}
       <div className='flex flex-col '>
 
-        <h1 className='text-3xl font-bold py-6 text-gray-800'>WELCOME {data[0]?.name}</h1>
+        <h1 className='text-3xl font-bold py-6 text-gray-800'>WELCOME {data?.name}</h1>
 
       </div>
-      <GridCard data={data[0]} />
+      <GridCard data={data} />
     </main>
   )
 }

@@ -33,7 +33,7 @@ export default function SignUp() {
                             <button type="submit" className="rounded-3xl bg-yellow-400 bg-opacity-50 px-10 py-2 text-white shadow-xl backdrop-blur-md transition-colors duration-300 hover:bg-yellow-600">Login</button>
                         </div>
                     </form>
-                    <Link className="text-center text-gray-300 mt-4" href="/login">Don&apos;t have an account? <span className='text-blue-900 hover:underline'>login</span></Link>
+                    <Link className="text-center text-gray-300 mt-4" href="/auth/signin">Don&apos;t have an account? <span className='text-blue-900 hover:underline'>login</span></Link>
                 </div>
             </div>
         </div >

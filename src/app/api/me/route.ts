@@ -15,9 +15,6 @@ export async function GET(req: any) {
       }
     );
     const profile = await response.json();
-
-    console.log('\n[profile]');
-    console.log('\t[v]', profile);
     return NextResponse.json({ profile })
   }
   

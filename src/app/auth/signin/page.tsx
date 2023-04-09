@@ -12,10 +12,9 @@ export default function Login() {
     }
     const handleSubmit = async(e: any) => {
         e.preventDefault()
-        console.log('value', value)
         const data = { ...value }
         const login = await signIn('credentials', {  ...data,redirect: true, callbackUrl: "/", });
-        console.log('data', login)
+
     }
     return (
         <div className="flex h-screen w-full items-center justify-center bg-gray-900 bg-cover bg-no-repeat" style={{
@@ -48,7 +47,7 @@ export default function Login() {
                             <button type="submit" className="rounded-3xl bg-yellow-400 bg-opacity-50 px-10 py-2 text-white shadow-xl backdrop-blur-md transition-colors duration-300 hover:bg-yellow-600">Login</button>
                         </div>
                     </form>
-                    <Link className="text-center text-gray-300 mt-4" href="/signup">Don&apos;t have an account? <span className='text-purple-500 hover:underline'>Sign Up</span></Link>
+                    <Link className="text-center text-gray-300 mt-4" href="/auth/signup">Don&apos;t have an account? <span className='text-purple-500 hover:underline'>Sign Up</span></Link>
                 </div>
             </div>
         </div >
