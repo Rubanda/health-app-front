@@ -6,19 +6,19 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { getCurrentUser } from '@/lib/session';
 
 const navigation = [
-  { name: 'Dashboard', href: '/' },
-  { name: 'profile', href: '/profile' }
+  { name: 'Dashboard', href: '/dashboard' },
 ];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function Navbar() {
-    const { data:session,status }:any = useSession();
-    const user:{avatar:string,name:string,username:string,id:number}= session?.user?.user;
+export default function Navbar({ user}:any) {
+    const users:{avatar:string,name:string,username:string,id:number}= user.user;
+    // console.log('\n[Navbar]...',users)
   const pathname = usePathname();
 
   return (
@@ -63,10 +63,10 @@ export default function Navbar() {
                       <span className="sr-only">Open user menu</span>
                       <Image
                         className="h-8 w-8 rounded-full"
-                        src={user?.avatar || 'https://avatar.vercel.sh/leerob'}
+                        src={users?.avatar || 'https://avatar.vercel.sh/leerob'}
                         height={32}
                         width={32}
-                        alt={`${user?.name || 'placeholder'} avatar`}
+                        alt={`${users?.name || 'placeholder'} avatar`}
                       />
                     </Menu.Button>
                   </div>
@@ -88,7 +88,12 @@ export default function Navbar() {
                                 active ? 'bg-gray-100' : '',
                                 'flex w-full px-4 py-2 text-sm text-gray-700'
                               )}
-                              onClick={() => signOut()}
+                              onClick={(event) => {
+                                event.preventDefault();
+                                signOut({ callbackUrl: `${window.location.origin}/login`});
+                              }
+                              
+                              }
                             >
                               Sign out
                             </button>
@@ -152,10 +157,10 @@ export default function Navbar() {
                     <div className="flex-shrink-0">
                       <Image
                         className="h-8 w-8 rounded-full"
-                        src={user.avatar}
+                        src={users?.avatar}
                         height={32}
                         width={32}
-                        alt={`${user.name} avatar`}
+                        alt={`${users?.name} avatar`}
                       />
                     </div>
                     <div className="ml-3">

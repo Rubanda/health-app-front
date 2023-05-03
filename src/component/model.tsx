@@ -1,12 +1,19 @@
 'use client'
 import { Dialog, Transition } from '@headlessui/react'
-import { AreaChart } from '@tremor/react';
+import { AreaChart, Flex, List, ListItem } from '@tremor/react';
 import { Fragment, useState } from 'react'
-type ModalProps={ isOpen: boolean; closeModal: () => void, user: any, chartData: any, dataFormatters: any }
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import TableComponent from './table';
+type ModalProps = {
+    isOpen: boolean;
+    closeModal: () => void,
+    user: any,
+    chartData: any,
+    dataFormatters: any
+}
+
 export default function MyModal({ isOpen, closeModal, user, chartData, dataFormatters }: ModalProps) {
 
-    console.log('\n[chartdatas]')
-    console.log('\t', chartData)
     return (
         <>
             <Transition appear show={isOpen} as={Fragment}>
@@ -38,29 +45,31 @@ export default function MyModal({ isOpen, closeModal, user, chartData, dataForma
                                     <Dialog.Title
                                         as="h3"
                                         className="text-lg font-medium leading-6 text-gray-900"
-                                    >
-                                        Heart  BPM
+                                    >   <Flex>
+                                            <div className="mt-4">
+                                            
+                                            </div>
+                                            <div className="mt-4">
+                                               
+                                                    <XMarkIcon className='text-black/76 w-6 h-6 cursor-pointer' onClick={closeModal}/>
+                                            </div>
+                                        </Flex>
                                     </Dialog.Title>
                                     <div className="mt-2">
-                                        <AreaChart
-                                            className="h-72 mt-4"
-                                            data={chartData}
-                                            index="date"
-                                            categories={["The Pragmatic Engineer"]}
-                                            colors={["indigo"]}
-                                            valueFormatter={dataFormatters}
-                                        />
+                                        <TableComponent data={chartData} />
+                                        {/* <List>
+                                            {chartData?.map((item: any) => (
+
+                                                <ListItem key={item?.id}>
+                                                    <span>{item?.type}</span>
+                                                    <span>{item?.name}</span>
+                                                    <span>{item?.rate}</span>
+                                                </ListItem>
+                                            ))}
+                                        </List> */}
                                     </div>
 
-                                    <div className="mt-4">
-                                        <button
-                                            type="button"
-                                            className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                                            onClick={closeModal}
-                                        >
-                                            Got it, thanks!
-                                        </button>
-                                    </div>
+
                                 </Dialog.Panel>
                             </Transition.Child>
                         </div>

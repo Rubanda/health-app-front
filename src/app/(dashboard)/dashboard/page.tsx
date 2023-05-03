@@ -1,7 +1,11 @@
 import { Inter } from 'next/font/google'
-import GridCard from './component/card';
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/pages/api/auth/[...nextauth]"
+import GridCard from '../../../component/card';
+import MyComponents from '../../../component/google-map';
+import { getCurrentUser } from '@/lib/session';
+import { authOptions } from "@/lib/auth"
+import { redirect } from "next/navigation"
+import MyDocument from '@/component/pdf';
+import Toast from '@/component/toast';
 const inter = Inter({ subsets: ['latin'] })
 declare global {
   interface Window { ethereum: any; }
@@ -35,12 +39,20 @@ export type UserDocument = {
     createdAt: string,
     updatedAt: string,
   }[]
-  vital: {
+  vitals: {
     id: number,
     userId: number,
     deviceId: number,
     type: string,
     payload: string,
+    createdAt: string,
+    updatedAt: string,
+  }[]
+  latest_location: {
+    id: number,
+    name: string,
+    payload:{lat:string,lng:string},
+    userId: number,
     createdAt: string,
     updatedAt: string,
   }[]
@@ -59,10 +71,14 @@ export async function getData(token: string) {
 }
 
 export default async function Home() {
-  const session: any = await getServerSession(authOptions)
-  const token: string = session?.user?.token
+  const user: any = await getCurrentUser()
+  if (!user) {
+    redirect(authOptions?.pages?.signIn || "/login")
+  }
+ 
+  const token: string = user?.token
+  console.log('[token/]....', token)
   const data= await getData(token)
-
   return (
     <main className="mx-auto max-w-7xl px-4 mt-5 sm:px-6 lg:px-8">
 
@@ -78,8 +94,15 @@ export default async function Home() {
 
         <h1 className='text-3xl font-bold py-6 text-gray-800'>WELCOME {data?.name}</h1>
 
+        <div>
       </div>
-      <GridCard data={data} />
+      </div>
+      <GridCard data={data} token={token} />
+      {/* <Toast /> */}
+
+      {/* <MyComponents /> */}
+      {/* <MyDocument /> */}
+      
     </main>
   )
 }

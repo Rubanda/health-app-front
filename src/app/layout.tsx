@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
+import Provider from '@/component/provider'
+import Toast from '@/component/toast'
 import './globals.css'
-import Provider from '@/app/component/provider'
-import Toast from '@/app/component/toast'
-import Navbar from '@/app/component/navbar'
+import { TailwindIndicator } from '../component/tailwind-indicator'
 export const metadata = {
   title: 'Health App',
   description: 'upload document to web3 storage',
@@ -14,17 +14,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className='bg-gray-50'
        >
-        <Provider>
-          <Suspense fallback='...'>
-            <Navbar />
-          </Suspense>
+        {/* <Provider> */}
           {children}
-          <Toast />
-        </Provider>
+          <TailwindIndicator />
+          {/* <Toast /> */}
+        {/* </Provider> */}
       </body>
     </html>
 
