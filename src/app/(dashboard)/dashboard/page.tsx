@@ -57,7 +57,7 @@ export type UserDocument = {
     updatedAt: string,
   }[]
 }
-export async function getData(token: string) {
+async function getData(token: string) {
   const user = await fetch("https://health.masatafit.com/api/user/me", {
     method: "GET",
     headers: {
