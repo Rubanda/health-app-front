@@ -7,12 +7,10 @@ import TableComponent from './table';
 type ModalProps = {
     isOpen: boolean;
     closeModal: () => void,
-    user: any,
     chartData: any,
-    dataFormatters: any
 }
 
-export default function MyModal({ isOpen, closeModal, user, chartData, dataFormatters }: ModalProps) {
+export default function MyModal({ isOpen, closeModal, chartData }: ModalProps) {
 
     return (
         <>
@@ -45,28 +43,19 @@ export default function MyModal({ isOpen, closeModal, user, chartData, dataForma
                                     <Dialog.Title
                                         as="h3"
                                         className="text-lg font-medium leading-6 text-gray-900"
-                                    >   <Flex>
+                                    >
+                                        <Flex>
                                             <div className="mt-4">
-                                            
+
                                             </div>
                                             <div className="mt-4">
-                                               
-                                                    <XMarkIcon className='text-black/76 w-6 h-6 cursor-pointer' onClick={closeModal}/>
+
+                                                <XMarkIcon className='text-black/76 w-6 h-6 cursor-pointer' onClick={closeModal} />
                                             </div>
                                         </Flex>
                                     </Dialog.Title>
                                     <div className="mt-2">
                                         <TableComponent data={chartData} />
-                                        {/* <List>
-                                            {chartData?.map((item: any) => (
-
-                                                <ListItem key={item?.id}>
-                                                    <span>{item?.type}</span>
-                                                    <span>{item?.name}</span>
-                                                    <span>{item?.rate}</span>
-                                                </ListItem>
-                                            ))}
-                                        </List> */}
                                     </div>
 
 

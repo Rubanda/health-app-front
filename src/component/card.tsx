@@ -17,6 +17,7 @@ import { ArrowSmallRightIcon, ArrowDownTrayIcon, ClipboardDocumentIcon } from "@
 import axios from "axios";
 import TezosLogo from "../../public/SVG/TezosLogo_Icon_Blue.svg"
 import Image from "next/image";
+import ModalPdf from "./pdf";
 
 type Props = {
     data: UserDocument
@@ -97,8 +98,6 @@ export function CardListComponent(items: CardListProps) {
             <MyModal
                 isOpen={isOpen}
                 closeModal={closeModal}
-                user={item}
-                dataFormatters={dataFormatters}
                 chartData={datas}
             />
 
@@ -148,8 +147,11 @@ export function structureData(model: any, type: string, rate: string) {
 // }
 export default function GridCard({ data, token }: Props) {
     const user = data;
-    const [report, setReport] = useState<{ pdf: string }>()
+    // const [report, setReport] = useState<{ pdf: string }>()
     const [loading, setLoading] = useState(false)
+    const [fetchedReport, setFetchedReport] = useState<{pdf: string}>({ pdf: '' })
+    const [isOpen, setIsOpen] = useState(false)
+    
     const heartData = structureData(user.vitals, 'heart', 'heart_rate')
     const oxygenData = structureData(user.vitals, 'oxygen', 'oxygen_rate')
     const bmi = structureData(user.vitals, 'bmi', 'bmi')
@@ -164,18 +166,26 @@ export default function GridCard({ data, token }: Props) {
                 Authorization: 'Bearer ' + token
             }
         })
-        console.log(report)
         if (report.status === 200) {
-            console.log('report generated')
-            setReport(report.data)
+            setFetchedReport(report.data)
+            console.log('report generated'+ report.data)
         }
         setLoading(false)
     }
-    console.log('ttttttttt.....', report)
-
+    function closeModal() {
+        setIsOpen(false)
+    }
+    function openModal() {
+        setIsOpen(true)
+    }
     return (
         <>
-
+            <ModalPdf
+                isOpen={isOpen}
+                closeModal={closeModal}
+                chartData={data}
+                token={token}     
+            />
             <Grid
                 numCols={1} numColsSm={2} numColsLg={3}
                 className="gap-2">
@@ -233,42 +243,19 @@ export default function GridCard({ data, token }: Props) {
 
 
             </Grid>
-            <Card
-                className=" mt-6"
-            >
-                <Flex className="gap-3">
-                    <button
-                        type="button"
-                        onClick={(event) => generateReport(token, event)}
-                        disabled={loading}
-                        className={`flex items-center  bg-black text-white p-1 px-2 rounded-lg text-base font-semibold
+            {/* generate report button */}
+            <Card className="mt-6">
+                <button
+                    type="button"
+                    onClick={(event) => {generateReport(token, event);  openModal();}}
+                    disabled={loading}
+                    className={`flex items-center  bg-black text-white p-1 px-2 rounded-lg text-base font-semibold
                     hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black 
                      ${loading}`}>
-                        {loading ? 'loading...' : 'Generate Report'} <ArrowSmallRightIcon className="ml-2 h-4 w-4" />
-                    </button>
-                    {report && <a href={report?.pdf} target="_blank" download><ArrowDownTrayIcon className="h-7 w-7 " /></a>}
-                </Flex>
-                <TextInput className="my-6" disabled={report && true} placeholder={report ? report?.pdf : 'generate report...'} />
-                {report && <Flex>
-                    <button
-                        onClick={() => navigator.clipboard.writeText(report ? report?.pdf : 'muhire akunda ibijumba')}
-                        className="flex items-center  bg-black text-white p-1 px-2 rounded-lg text-base font-semibold
-                hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black 
-                 "
-                    >
-                        <ClipboardDocumentIcon className="h-6 w-6 mr-3" /> copy
-                    </button>
-                    <button
-                        onClick={() => navigator.clipboard.writeText(report ? report?.pdf : 'muhire akunda ibijumba')}
-                        className="flex items-center  bg-black text-white p-1 px-2 rounded-lg text-base font-semibold
-                hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black 
-                 "
-                    >
-                        <Image src={TezosLogo} alt="Tezos logo" className="flex items justify-center h-6 w-6 mr-3" /> tezos
-                    </button>
-                </Flex>}
-
+                    {loading ? 'loading...' : 'Generate Report'} <ArrowSmallRightIcon className="ml-2 h-4 w-4" />
+                </button>
             </Card>
+
         </>
     )
 }
