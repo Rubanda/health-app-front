@@ -165,7 +165,7 @@ export default function GridCard({ data, token }: Props) {
                     <MyComponents location={user?.latest_location} /> : null
                 }
             </div>
-            <Toast />
+            {/* <Toast /> */}
 
         </>
     )
