@@ -18,7 +18,7 @@ export default function Login() {
         e.preventDefault()
         const data = { ...value }
         const login = await signIn('credentials', { ...data, redirect: true,   callbackUrl: searchParams?.get("from") || "/dashboard", });
-
+        console.log("from login page", login)
     }
     return (
         <div className="flex h-screen w-full items-center justify-center bg-gray-900 bg-cover bg-no-repeat" style={{

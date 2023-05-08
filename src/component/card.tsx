@@ -1,130 +1,28 @@
 'use client'
-import {
-    Grid, Col, Card,
-    Text, Metric,
-    CategoryBar,
-    Flex,
-    Button,
-    TextInput,
-} from "@tremor/react";
-import {
-
-} from "@tremor/react";
-import { use, useState, useEffect } from "react";
-import MyModal from "./model";
+import { Grid, Col, Card, Flex } from "@tremor/react";
+import { useState } from "react";
 import { UserDocument } from "../app/(dashboard)/dashboard/page";
-import { ArrowSmallRightIcon, ArrowDownTrayIcon, ClipboardDocumentIcon } from "@heroicons/react/24/outline";
+import { ArrowSmallRightIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
-import TezosLogo from "../../public/SVG/TezosLogo_Icon_Blue.svg"
-import Image from "next/image";
 import ModalPdf from "./pdf";
+import { SimpleCard } from "./cards/simpleCard";
+import { CardListComponent } from "./cards/listCard";
+import MyComponents from '@/component/google-map';
 
 type Props = {
     data: UserDocument
     token: string
 
 }
-/** 
-@description: This component is used to display type and value of simple data
-@param type: string
-@param value: string
-*/
-export function SimpleCard({ type, value }: { type: string, value: string }) {
-    return (
-        <div >
-            <Text>{type}</Text>
-            <p>{!value ? 'No Data' : value}</p>
-        </div>
-    )
-}
-
-/** 
-@description: This component is used to display type and value of simple data
-@param type: string
-@param heart_rate: string
-@param openModal: function
-*/
-export function CardComponent({ type, heart_rate, openModal }:
-    {
-        type: string, heart_rate: number, openModal: () => void
-    }) {
 
 
-    return (
-        <Card>
-            <Flex>
 
-                <Text>{type}</Text>
-                <Text>{heart_rate}</Text>
-            </Flex>
-            <CategoryBar
-                categoryPercentageValues={[50, 60, 70, 100]}
-                colors={["emerald", "yellow", "orange", "rose"]}
-                percentageValue={62}
-                className="mt-3"
-            />
-            <button
-                type="button"
-                onClick={openModal}
-                className="rounded-md 
-                            text-black font-medium bg-opacity-0 mt-5 px-2 py-3 text-sm hover:bg-white hover:text-black hover:border hover:border-black"
-            >
-                view more
-            </button>
-
-        </Card>
-    )
-}
-type CardListProps = { item: { id: number, type: string, payload: {}, rate: any, name?: string }[] }
-/** 
-@description: This component for displaying Measured data
-@param items: CardListProps
-*/
-export function CardListComponent(items: CardListProps) {
-    const item = items?.item
-    let [isOpen, setIsOpen] = useState(false)
-    const [datas, setData] = useState<any>()
-    const [dataFormatters, setDataFormatters] = useState<any>()
-
-    function closeModal() {
-        setIsOpen(false)
-    }
-    function openModal() {
-        setIsOpen(true)
-    }
-
-    return (
-        <>
-            <MyModal
-                isOpen={isOpen}
-                closeModal={closeModal}
-                chartData={datas}
-            />
-
-            <Card>
-                <Flex className="flex flex-col md:flex-row">
-
-                    <div>
-                        <Text>{item?.length > 0 ? item[0]?.type : "No Data"}</Text>
-                        <Metric>{item?.length > 0 ? item[0]?.rate : "No Data"}</Metric>
-                    </div>
-
-                    <button
-                        type="button"
-                        onClick={() => { setData(item); openModal(); setDataFormatters(dataFormatters) }}
-                        className="flex items-center  text-black p-1 px-2 rounded-lg text-base font-semibold
-                    hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black 
-                     ">
-                        View more <ArrowSmallRightIcon className="ml-2 h-4 w-4" />
-                    </button>
-                </Flex>
-
-            </Card>
-        </>
-    )
-}
-
-// List of Vital types
+/**
+ *  @description: This function is used to structure data for vitals
+ * @param model: any
+ * @param type: string
+ * @param rate: string
+ */
 export function structureData(model: any, type: string, rate: string) {
     return model?.filter((item: any) => item.type === type).map((item: any) => {
         return {
@@ -133,25 +31,19 @@ export function structureData(model: any, type: string, rate: string) {
         }
     }).slice(0, 3)
 }
-// export async function generateReport(token: string) {
-//     const report = await axios.post('http://localhost:4000/api/user/pdf', {}, {
-//         headers: {
-//             Authorization: 'Bearer ' + token
-//         }
-//     })
-//     console.log(report)
-//     if (report.status === 200) {
-//         console.log('report generated')
-//         return report
-//     }
-// }
+
+/**
+ *  @description: This component is used to display type and value of simple data
+ * @param Props: {data: UserDocument, token: string}
+ */
 export default function GridCard({ data, token }: Props) {
     const user = data;
     // const [report, setReport] = useState<{ pdf: string }>()
     const [loading, setLoading] = useState(false)
-    const [fetchedReport, setFetchedReport] = useState<{pdf: string}>({ pdf: '' })
+    const [fetchedReport, setFetchedReport] = useState<{ pdf: string }>({ pdf: '' })
     const [isOpen, setIsOpen] = useState(false)
-    
+    const [toggleMap, setToggleMap] = useState(false)
+
     const heartData = structureData(user.vitals, 'heart', 'heart_rate')
     const oxygenData = structureData(user.vitals, 'oxygen', 'oxygen_rate')
     const bmi = structureData(user.vitals, 'bmi', 'bmi')
@@ -168,9 +60,16 @@ export default function GridCard({ data, token }: Props) {
         })
         if (report.status === 200) {
             setFetchedReport(report.data)
-            console.log('report generated'+ report.data)
+            console.log('report generated' + report.data)
         }
         setLoading(false)
+    }
+    async function generateReportAndOpenModal(token: string, event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> {
+        await new Promise<void>(async (resolve) => {
+            await generateReport(token, event);
+            resolve();
+        });
+        openModal();
     }
     function closeModal() {
         setIsOpen(false)
@@ -178,46 +77,40 @@ export default function GridCard({ data, token }: Props) {
     function openModal() {
         setIsOpen(true)
     }
+    function toggleMaps() {
+        setToggleMap(!toggleMap)
+    }
+    console.log('[GridCard]-[toggleMap]', toggleMap)
     return (
         <>
             <ModalPdf
                 isOpen={isOpen}
                 closeModal={closeModal}
                 chartData={data}
-                token={token}     
+                token={token}
             />
             <Grid
                 numCols={1} numColsSm={2} numColsLg={3}
                 className="gap-2">
-                <Col
-                // numColSpan={1} numColSpanLg={1}
-                >
-                    <Card>
+                <Col>
+                    <Card className="h-full">
                         <Flex className="flex gap-4">
-
                             <SimpleCard type='Blood Group' value={user.blood_group} />
-
                             <SimpleCard type='Gender' value={user.gender} />
                         </Flex>
                     </Card>
 
                 </Col>
-                <Col
-                // numColSpan={1} numColSpanLg={1}
-                >
-                    <Card>
+                <Col>
+                    <Card className="h-full">
                         <Flex className="flex gap-4 ">
-
                             <SimpleCard type='Height' value={`${user?.height}`} />
-
                             <SimpleCard type='Weight' value={`${user?.weight}`} />
                         </Flex>
                     </Card>
                 </Col>
-                <Col
-                // numColSpan={3} numColSpanLg={1}
-                >
-                    <Card>
+                <Col>
+                    <Card className="h-full">
                         <SimpleCard type='metaMaskAddress' value={user?.metaMaskAddress} />
                     </Card>
                 </Col>
@@ -240,21 +133,38 @@ export default function GridCard({ data, token }: Props) {
                 <Col>
                     <CardListComponent item={respiration} />
                 </Col>
+                {/* generate report button && map*/}
+                <Col>
+                    <Card className="h-full w-full !p-0">
+                        <div className="flex h-full justify-center gap-4">
+                            <button
+                                className={` flex w-full items-center px-4 py-2 ${toggleMap ? 'bg-green-500' : 'bg-black'} text-white rounded-lg text-base font-semibold
+                                hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black 
+                                `} onClick={toggleMaps}>
+                                Show Map
+                            </button>
+                            <button
+                                type="button"
+                                onClick={(event) => { generateReportAndOpenModal(token, event); }}
+                                disabled={loading}
+                                className={`flex w-full items-center px-4 py-2 ${loading ? 'bg-green-500' : 'bg-black'} text-white rounded-lg text-base font-semibold
+                                hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black 
+                                ${loading}`}>
+                                {loading ? 'loading...' : 'Generate Report'} <ArrowSmallRightIcon className="ml-2 h-4 w-4" />
+                            </button>
+                        </div>
+                    </Card>
+                </Col>
 
 
             </Grid>
-            {/* generate report button */}
-            <Card className="mt-6">
-                <button
-                    type="button"
-                    onClick={(event) => {generateReport(token, event);  openModal();}}
-                    disabled={loading}
-                    className={`flex items-center  bg-black text-white p-1 px-2 rounded-lg text-base font-semibold
-                    hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black 
-                     ${loading}`}>
-                    {loading ? 'loading...' : 'Generate Report'} <ArrowSmallRightIcon className="ml-2 h-4 w-4" />
-                </button>
-            </Card>
+
+
+            <div>
+                {toggleMap ?
+                    <MyComponents location={user?.latest_location} /> : null
+                }
+            </div>
 
         </>
     )

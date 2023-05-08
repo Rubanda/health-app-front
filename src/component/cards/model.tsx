@@ -1,9 +1,8 @@
-'use client'
 import { Dialog, Transition } from '@headlessui/react'
-import { AreaChart, Flex, List, ListItem } from '@tremor/react';
-import { Fragment, useState } from 'react'
+import {  Flex } from '@tremor/react';
+import { Fragment, } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import TableComponent from './table';
+import TableComponent from '../table';
 type ModalProps = {
     isOpen: boolean;
     closeModal: () => void,

@@ -1,6 +1,5 @@
 import { Inter } from 'next/font/google'
 import GridCard from '../../../component/card';
-import MyComponents from '../../../component/google-map';
 import { getCurrentUser } from '@/lib/session';
 import { authOptions } from "@/lib/auth"
 import { redirect } from "next/navigation"
@@ -77,8 +76,8 @@ export default async function Home() {
   }
  
   const token: string = user?.token
-  console.log('[token/]....', token)
   const data= await getData(token)
+  const { latest_location } = data
   return (
     <main className="mx-auto max-w-7xl px-4 mt-5 sm:px-6 lg:px-8">
 
@@ -99,8 +98,6 @@ export default async function Home() {
       </div>
       <GridCard data={data} token={token} />
       {/* <Toast /> */}
-
-      {/* <MyComponents /> */}
       {/* <MyDocument /> */}
       
     </main>
