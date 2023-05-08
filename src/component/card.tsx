@@ -8,6 +8,7 @@ import ModalPdf from "./pdf";
 import { SimpleCard } from "./cards/simpleCard";
 import { CardListComponent } from "./cards/listCard";
 import MyComponents from '@/component/google-map';
+import Toast from "./toast";
 
 type Props = {
     data: UserDocument
@@ -86,6 +87,7 @@ export default function GridCard({ data, token }: Props) {
                 closeModal={closeModal}
                 chartData={data}
                 token={token}
+                report={fetchedReport}
             />
             <Grid
                 numCols={1} numColsSm={2} numColsLg={3}
@@ -163,6 +165,7 @@ export default function GridCard({ data, token }: Props) {
                     <MyComponents location={user?.latest_location} /> : null
                 }
             </div>
+            <Toast />
 
         </>
     )

@@ -62,7 +62,7 @@ const checkIfWalletConnected = async (wallet: any) => {
     }
 };
 
-const requestOperation = async () => {
+const requestOperation = async (pdfFile:string) => {
     try {
         const activeAccount = await getActiveAccount();
         if (!activeAccount) {
@@ -77,22 +77,16 @@ const requestOperation = async () => {
                   parameters: {
                     entrypoint: 'set_value',
                     value: {
-                      string: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                      string: pdfFile,
                     },
                   },
                 },
               ],
         });
         console.log('[result]', result)
-        return {
-            success: true,
-            result,
-        };
+        return result
     } catch (error) {
-        return {
-            success: false,
-            error,
-        };
+        return error
     }
 };
 

@@ -1,10 +1,9 @@
 import { Inter } from 'next/font/google'
 import GridCard from '../../../component/card';
 import { getCurrentUser } from '@/lib/session';
-import { authOptions } from "@/lib/auth"
-import { redirect } from "next/navigation"
-import MyDocument from '@/component/pdf';
-import Toast from '@/component/toast';
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
 const inter = Inter({ subsets: ['latin'] })
 declare global {
   interface Window { ethereum: any; }
@@ -97,8 +96,6 @@ export default async function Home() {
       </div>
       </div>
       <GridCard data={data} token={token} />
-      {/* <Toast /> */}
-      {/* <MyDocument /> */}
       
     </main>
   )
