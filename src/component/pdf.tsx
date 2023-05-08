@@ -8,7 +8,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import axios from 'axios'
-import {  requestOperation} from './beacon'
+// import {  requestOperation} from './beacon'
 type ModalProps = {
   isOpen: boolean;
   closeModal: () => void,
@@ -113,7 +113,9 @@ export default function ModalPdf({ isOpen, closeModal, chartData, token,report}:
                             <ShareIcon className="h-6 w-6 mr-3" /> Share
                           </button>
                           <button
-                            onClick={()=>{requestOperation(report?.pdf);closeModal()}}
+                            onClick={()=>{
+                              // requestOperation(report?.pdf);
+                              closeModal()}}
                             className="flex items-center  bg-black text-white p-1 px-2 rounded-lg text-base font-semibold
                           hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black 
                           "
