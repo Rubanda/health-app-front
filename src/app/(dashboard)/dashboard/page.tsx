@@ -24,7 +24,7 @@ export type UserDocument = {
   avatar: string
   height: number
   weight: number
-  metaMaskAddress: string
+  tezos_address: string
   created_at: string
   updated_at: string
   devices: {

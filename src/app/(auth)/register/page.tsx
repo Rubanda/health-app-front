@@ -15,7 +15,7 @@ type CreateUser = {
 
 export default function SignUp() {
     const router = useRouter()
-    console.log('FROM CREATE [router]', router)
+    // console.log('FROM CREATE [router]', router)
     const [value, setValues] = React.useState<CreateUser>({
         name: '',
         email: '',
@@ -31,13 +31,13 @@ export default function SignUp() {
         e.preventDefault()
         const data = { ...value }
         const res = await axios.post('https://health.masatafit.com/api/auth/create', data)
-        console.log('FROM CREATE [res]', res)
+        // console.log('FROM CREATE [res]', res)
         if (res.status === 201) {
             router.push('/login')
         }
 
     }
-    console.log('FROM CREATE [value]', value)
+    // console.log('FROM CREATE [value]', value)
     return (
         <div className="flex h-screen w-full items-center justify-center bg-gray-900 bg-cover bg-no-repeat" style={{
             backgroundImage:

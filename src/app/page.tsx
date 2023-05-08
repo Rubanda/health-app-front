@@ -8,7 +8,6 @@ export default async function Home() {
     if (!user) {
         redirect("/dashboard")
     }
-    console.log('[user/]....', user)
     return (
         <>
             <div className='main'>

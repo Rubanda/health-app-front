@@ -45,9 +45,9 @@ export default function ModalPdf({ isOpen, closeModal, chartData, token }: Modal
       setEmail('')
       closeModal()
     }
-    console.log("send email", report.data)
+    // console.log("send email", report.data)
   }
-  console.log("[email out of the onchange]", {email})
+  // console.log("[email out of the onchange]", {email})
 
   return (
     <>

@@ -60,7 +60,6 @@ export default function GridCard({ data, token }: Props) {
         })
         if (report.status === 200) {
             setFetchedReport(report.data)
-            console.log('report generated' + report.data)
         }
         setLoading(false)
     }
@@ -80,7 +79,6 @@ export default function GridCard({ data, token }: Props) {
     function toggleMaps() {
         setToggleMap(!toggleMap)
     }
-    console.log('[GridCard]-[toggleMap]', toggleMap)
     return (
         <>
             <ModalPdf
@@ -111,7 +109,7 @@ export default function GridCard({ data, token }: Props) {
                 </Col>
                 <Col>
                     <Card className="h-full">
-                        <SimpleCard type='metaMaskAddress' value={user?.metaMaskAddress} />
+                        <SimpleCard type='metaMaskAddress' value={user?.tezos_address} />
                     </Card>
                 </Col>
 
