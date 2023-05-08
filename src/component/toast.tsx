@@ -3,7 +3,6 @@ import {
   connectWallet,
   getActiveAccount,
   disconnectWallet,
-  requestOperation
 } from "./beacon";
 
 import { useEffect, useState } from "react";
@@ -51,7 +50,6 @@ export default function Toast() {
               wallet.slice(wallet.length - 4, wallet.length)
             : "Connect with Temple"}
         </button>
-       <button onClick={requestOperation}>send token</button>
       </div>
     </div>
   );

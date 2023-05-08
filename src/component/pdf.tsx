@@ -8,20 +8,21 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import axios from 'axios'
-
+import {  requestOperation} from './beacon'
 type ModalProps = {
   isOpen: boolean;
   closeModal: () => void,
   chartData: any,
   token: string
+  report: {pdf:string}
 }
 
 const isEmail = (email:string) =>
   /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
  
 
-export default function ModalPdf({ isOpen, closeModal, chartData, token }: ModalProps) {
-  let report = chartData.report_url
+export default function ModalPdf({ isOpen, closeModal, chartData, token,report}: ModalProps) {
+ 
   const [email, setEmail] = React.useState<string>('')
   const [errors, setErrors] = React.useState<boolean>(false);
 
@@ -47,7 +48,6 @@ export default function ModalPdf({ isOpen, closeModal, chartData, token }: Modal
     }
     // console.log("send email", report.data)
   }
-  // console.log("[email out of the onchange]", {email})
 
   return (
     <>
@@ -95,8 +95,8 @@ export default function ModalPdf({ isOpen, closeModal, chartData, token }: Modal
                     >
                       <Flex className="gap-3">
 
-                        <TextInput className="my-6" disabled={report && true} placeholder={report ? report : 'generate report...'} />
-                        {report && <a href={report} target="_blank" download><ArrowDownTrayIcon className="h-7 w-7 " /></a>}
+                        <TextInput className="my-6"  placeholder={report?.pdf ? report?.pdf : 'generate report...'} />
+                        {report && <a href={report.pdf} target="_blank" download><ArrowDownTrayIcon className="h-7 w-7 " /></a>}
                       </Flex>
                       <TextInput 
                       className={`mb-6  !focus:outline-none `} 
@@ -113,7 +113,7 @@ export default function ModalPdf({ isOpen, closeModal, chartData, token }: Modal
                             <ShareIcon className="h-6 w-6 mr-3" /> Share
                           </button>
                           <button
-                            onClick={() => navigator.clipboard.writeText(report ? report : 'muhire akunda ibijumba')}
+                            onClick={()=>{requestOperation(report?.pdf);closeModal()}}
                             className="flex items-center  bg-black text-white p-1 px-2 rounded-lg text-base font-semibold
                           hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black 
                           "
