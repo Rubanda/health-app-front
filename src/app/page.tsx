@@ -1,63 +1,71 @@
-'use client'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import { SignIn } from '@clerk/nextjs/app-beta';
-import { useUser, UserButton } from '@clerk/nextjs'
+import { getCurrentUser } from "@/lib/session"
+import { Flex } from "@tremor/react"
+import { redirect } from "next/navigation"
+import Image from "next/image"
 
-const inter = Inter({ subsets: ['latin'] })
-declare global {
-  interface Window { ethereum: any; }
-}
-export default function Home() {
-  const { isLoaded, isSignedIn, user } = useUser()
-
-  if (!isLoaded || !isSignedIn) {
+export default async function Home() {
+    const user: any = await getCurrentUser()
+    if (!user) {
+        redirect("/dashboard")
+    }
     return (
-      <div className='flex flex-col flex-grow items-center justify-center h-screen	 '>
-      <SignIn />
+        <>
+            <div className='main'>
+                <div className='gradient' />
+            </div>
 
-      </div>
+            <main className='app'>
+                <section className='w-full flex-center flex-col'>
+                    <h1 className='head_text text-center'>
+                        Transform Your Health with our Innovative Health App
+                        <br className='max-md:hidden' />
+                        <span className='orange_gradient text-center'> </span>
+                    </h1>
+                    <p className='desc text-center'>
+                        Our health app, built with Flutter and powered by Node.js and Next.js,
+                        tracks your heart rate and location to generate comprehensive health reports.
+                        With a simple and intuitive interface, you can easily view and
+                        analyze your health data to make informed decisions about your lifestyle and wellness.
+                    </p>
+
+                    {/* <Feed /> */}
+                </section>
+                <div className="w-3/4 mt-4">
+                    <Flex className="flex-col gap-7">
+                        <input
+                            type='text'
+                            placeholder='Search for a tag or a username'
+                            value='https://drive.google.com/file/d/1T8hRotBu3PuVjksZ8wc3GCpjZfFi1GT5/view?usp=share_link'
+                            disabled={true}
+                            className='search_input peer'
+                        />
+                        <button
+                            // onClick={() => navigator.clipboard.writeText('https://drive.google.com/file/d/1T8hRotBu3PuVjksZ8wc3GCpjZfFi1GT5/view?usp=share_link')}
+                            className="flex items-center  bg-black text-white p-1 px-2 rounded-lg text-base font-semibold
+                          hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black 
+                          "
+                        >
+                            {/* <Image src={TezosLogo} alt="Tezos logo" className="flex items justify-center h-6 w-6 mr-3" />  */}
+                            <a className="" href="https://drive.google.com/file/d/1T8hRotBu3PuVjksZ8wc3GCpjZfFi1GT5/view?usp=share_link" target="_blank">Download App APK</a>
+                        </button>
+                    </Flex>
+
+                </div>
+
+
+                <p className="text-gray-500 ">Go to dashboard
+                    <a href="/dashboard" className="inline-flex ml-1 items-center font-medium text-blue-600 hover:underline">
+                        see you are data
+                        <svg aria-hidden="true" className="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd">
+                            </path>
+                        </svg>
+                    </a>
+                </p>
+
+
+            </main>
+
+        </>
     )
-  }
-  console.log('[user]', user?.primaryWeb3Wallet,)
-
-  return (
-    <main className="flex flex-col justify-between items-center p-24 min-h-screen">
-      <div className='flex justify-between items-center text-xs max-w-1100 w-full z-2 font-mono'>
-        <Image
-          src="/iot-logo.svg"
-          alt="health app Logo"
-          className=''
-          width={100}
-          height={44}
-          priority
-        />
-        <div className='flex justify-center items-center gap-3'>
-          {user && (
-            <>
-              <button className='relative m-0 p-3 px-4 bg-opacity-50 bg-gray-300 border border-gray-400 rounded-lg'>
-                {user?.firstName}  {user.primaryWeb3Wallet?.web3Wallet.slice(0, 6) + '...' + user.primaryWeb3Wallet?.web3Wallet.slice(-4)} 
-                <span className='absolute top-0 right-0 mt-3 ml-2 w-3 h-3 rounded-full bg-green-500'></span>
-              </button>
-              <UserButton />
-            </>
-          )
-          }
-        </div>
-      </div>
-
-      <div className='flex justify-center items-center py-16'>
-
-      </div>
-
-      <div className=''>
-        <h2 className={inter.className}>
-          {user?.firstName} <span>-&gt;</span>
-        </h2>
-        <p className={inter.className}>
-          You can upload your files here.
-        </p>
-      </div>
-    </main>
-  )
 }
