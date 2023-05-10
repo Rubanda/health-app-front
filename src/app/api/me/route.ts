@@ -5,7 +5,7 @@ const secret = process.env.NEXTAUTH_SECRET
 export async function GET(req: any) {
     const token = await getToken({ req, secret })
     const response = await fetch(
-      "http://localhost:4000/api/user/me",
+      "https://health.masatafit.com/api/user/me",
       {
         method: "GET",
         headers: {
