@@ -8,24 +8,22 @@ const network: Network = { type: NetworkType.GHOSTNET };
 
 const options = {
     name: "health app ",
-    iconUrl: "https://tezostaquito.io/img/favicon.png",
-    rpcURL: "https://rpc.tzkt.io/ghostnet",
-    preferredNetwork: network.type,
+    network,
+    rpcUrl: "https://rpc.tzkt.io/ghostnet/", 
 };
-const rpcURL = "https://rpc.tzkt.io/ghostnet";
 const dAppClient = new DAppClient(options);
 
 const getActiveAccount = async () => {
-    return await dAppClient.requestPermissions({
-        network: {
-            type: NetworkType.GHOSTNET,
-            rpcUrl: "https://rpc.tzkt.io/ghostnet/",
-          },}
-    );
-};
-
+    try {
+      const activeAccount = await dAppClient.getActiveAccount();
+      return activeAccount;
+    } catch (error) {
+      console.error("Error getting active account", error);
+      return undefined;
+    }
+  };
 const connectWallet = async (): Promise<{ success: boolean, wallet: string }> => {
-    const activeAccount = await dAppClient.getActiveAccount();
+    const activeAccount = await getActiveAccount();
     console.log("activeAccount", activeAccount)
     if (activeAccount) {
         // If defined, the user is connected to a wallet.
@@ -33,8 +31,12 @@ const connectWallet = async (): Promise<{ success: boolean, wallet: string }> =>
         console.log("!!!!!!Already connected:!!!!!", activeAccount.address);
         myAddress = activeAccount.address;
     } else {
-        const permissions = await getActiveAccount();
-        console.log("New connection:", permissions.address);
+        const permissions = await dAppClient.requestPermissions({
+            network: {
+                type: NetworkType.GHOSTNET,
+                rpcUrl: "https://rpc.tzkt.io/ghostnet/",
+            },
+        });
         myAddress = permissions.address;
     }
     return { success: true, wallet: myAddress };
@@ -47,9 +49,9 @@ const disconnectWallet = async () => {
 
 const checkIfWalletConnected = async (wallet: any) => {
     try {
-        const activeAccount = await dAppClient.getActiveAccount();
+        const activeAccount = await getActiveAccount();
         if (!activeAccount) {
-            await dAppClient.requestPermissions();
+            await connectWallet();
         }
         return {
             success: true,
@@ -65,9 +67,7 @@ const checkIfWalletConnected = async (wallet: any) => {
 const requestOperation = async (pdfFile:string) => {
     try {
         const activeAccount = await getActiveAccount();
-        if (!activeAccount) {
-            await dAppClient.requestPermissions();
-        }
+        console.log('[activeAccount]', activeAccount)
         const result = await dAppClient.requestOperation({
             operationDetails: [
                 {
@@ -83,7 +83,7 @@ const requestOperation = async (pdfFile:string) => {
                 },
               ],
         });
-        console.log('[result]', result)
+        console.log('[result---after sending token]', result)
         return result
     } catch (error) {
         return error
@@ -92,6 +92,7 @@ const requestOperation = async (pdfFile:string) => {
 
 
 export {
+    dAppClient,
     connectWallet,
     getActiveAccount,
     checkIfWalletConnected,

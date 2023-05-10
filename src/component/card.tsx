@@ -1,6 +1,6 @@
 'use client'
 import { Grid, Col, Card, Flex } from "@tremor/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserDocument } from "../app/(dashboard)/dashboard/page";
 import { ArrowSmallRightIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
@@ -9,6 +9,7 @@ import { SimpleCard } from "./cards/simpleCard";
 import { CardListComponent } from "./cards/listCard";
 import MyComponents from '@/component/google-map';
 import Toast from "./toast";
+import { connectWallet, getActiveAccount, disconnectWallet, } from "./beacon";
 
 type Props = {
     data: UserDocument
@@ -54,7 +55,7 @@ export default function GridCard({ data, token }: Props) {
     async function generateReport(token: string, event: any) {
         event.preventDefault()
         setLoading(true)
-        const report = await axios.post('http://localhost:4000/api/user/pdf', {}, {
+        const report = await axios.post('https://health.masatafit.com/api/user/pdf', {}, {
             headers: {
                 Authorization: 'Bearer ' + token
             }
@@ -80,9 +81,32 @@ export default function GridCard({ data, token }: Props) {
     function toggleMaps() {
         setToggleMap(!toggleMap)
     }
+    // Temple wallet
+    const [wallet, setWallet] = useState<any>(null);
+    const [akord, setAkord] = useState<any>(null);
+
+    const handleConnectWallet = async () => {
+        const { wallet } = await connectWallet();
+        setWallet(wallet);
+    };
+    const handleDisconnectWallet = async () => {
+        const { wallet } = await disconnectWallet();
+        setWallet(wallet);
+    };
+
+    useEffect(() => {
+        const func = async () => {
+            const account: any = await getActiveAccount();
+            if (account) {
+                setWallet(account.address);
+            }
+        };
+        func();
+    }, []);
     return (
         <>
             <ModalPdf
+                wallet={wallet}
                 isOpen={isOpen}
                 closeModal={closeModal}
                 chartData={data}
@@ -165,7 +189,7 @@ export default function GridCard({ data, token }: Props) {
                     <MyComponents location={user?.latest_location} /> : null
                 }
             </div>
-            {/* <Toast /> */}
+            <Toast wallet={wallet} handleConnectWallet={handleConnectWallet} handleDisconnectWallet={handleDisconnectWallet} />
 
         </>
     )

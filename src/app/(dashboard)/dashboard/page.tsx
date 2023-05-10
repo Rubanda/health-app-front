@@ -5,9 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 const inter = Inter({ subsets: ['latin'] })
-declare global {
-  interface Window { ethereum: any; }
-}
+
 export type UserDocument = {
   id: number
   name: string
@@ -24,6 +22,7 @@ export type UserDocument = {
   height: number
   weight: number
   tezos_address: string
+  hashEdTransaction: string
   created_at: string
   updated_at: string
   devices: {
@@ -62,7 +61,7 @@ async function getData(token: string) {
       "Content-Type": "application/json",
       "Authorization": "Bearer " + token,
     },
-    cache: 'no-store'
+     next: { revalidate: 10 } 
   })
   const res= await user.json() as UserDocument
   return res
@@ -76,7 +75,7 @@ export default async function Home() {
  
   const token: string = user?.token
   const data= await getData(token)
-  const { latest_location } = data
+  console.log('revalidated: data', data)
   return (
     <main className="mx-auto max-w-7xl px-4 mt-5 sm:px-6 lg:px-8">
 
