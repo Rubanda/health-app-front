@@ -1,3 +1,4 @@
+'use client'
 import * as React from "react"
 import TezosLogo from "@/public/SVG/TezosLogo_Icon_Blue.svg"
 import { Button } from "@/components/ui/button"
@@ -13,43 +14,47 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import axios from "axios"
 import { ArrowDownTrayIcon, ArrowSmallRightIcon } from "@heroicons/react/24/outline"
-import { ShareIcon } from "lucide-react"
+import { Loader2, Share2 } from "lucide-react"
 import Image from "next/image"
-
+import generateReport from "@/lib/fetchData"
+interface LoadingState {
+    [buttonId: string]: boolean;
+}
 const isEmail = (email: string) =>
     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
 
 
 
-export function CardWithForm({ token, report }: any) {
+export function CardWithForm({ token }: any) {
 
     const [email, setEmail] = React.useState<string>('')
     const [errors, setErrors] = React.useState<boolean>(false);
+    const [loading, setLoading] = React.useState<LoadingState>({})
+    const [report, setReport] = React.useState<string>()
+    // on loading 
 
-    const [loading, setLoading] = React.useState(false)
-    const [fetchedReport, setFetchedReport] = React.useState<{ pdf: string }>({ pdf: '' })
     const handleOnChange = (e: any) => {
         e.preventDefault()
         setEmail(e.target.value)
-        // console.log("email", email)
-        // check if the email is valid
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const isValid = regex.test(email);
 
         setErrors(!isValid)
     }
     async function generateReportAndOpenModal(token: string,
-        event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    ): Promise<void> {
+        event: React.MouseEvent<HTMLButtonElement, MouseEvent>, buttonId: string): Promise<void> {
+        event.preventDefault();
+        setLoading((prevState) => ({ ...prevState, [buttonId]: true }));
         await new Promise<void>(async (resolve) => {
-            //    const report =   GenerateReport(token);
-            //    console.log('report', {report})
-            // setFetchedReport(report);
+            const report = await generateReport(token);
+            setReport(report);
             resolve();
         });
+        setLoading((prevState) => ({ ...prevState, [buttonId]: false }));
     }
-    const handleSendEmail = async () => {
-        const report = await axios.post(`${process.env.BACKEND_URL}/api/user/email?toEmail=${email}`, {}, {
+    const handleSendEmail = async (buttonId: string) => {
+        setLoading((prevState) => ({ ...prevState, [buttonId]: true }));
+        const report = await axios.post(`http://localhost:4000/api/user/email?toEmail=${email}`, {}, {
             headers: {
                 Authorization: 'Bearer ' + token
             }
@@ -57,6 +62,8 @@ export function CardWithForm({ token, report }: any) {
         if (report.status === 200) {
             setEmail('')
         }
+
+        setLoading((prevState) => ({ ...prevState, [buttonId]: false }));
     }
     // const requestOperation = async (pdfFile: string) => {
     //   try {
@@ -97,55 +104,63 @@ export function CardWithForm({ token, report }: any) {
                 <CardContent>
                     <form>
                         <div className="grid w-full items-center gap-4">
-                            <div>
-                                <div className="flex flex-col space-y-1.5">
-                                    <Label htmlFor="name">Pdf Link</Label>
-                                    <Input id="report" placeholder={report?.pdf ? report?.pdf : 'generate report...'} defaultValue='Report' />
+                            <div className="flex items-center gap-3">
+                                <div className="flex flex-grow flex-col space-y-1.5">
+                                    <Label htmlFor="report">Pdf Link</Label>
+                                    <Input id="report" placeholder={report ? report : 'generate report...'} defaultValue={report} />
                                 </div>
-                                {report && <a href={report.pdf} target="_blank" download><ArrowDownTrayIcon className="h-7 w-7 " /></a>}
+                                <span className="flex flex-col self-end	">
+                                    {report && <a href={report} target="_blank" download><ArrowDownTrayIcon className="h-7 w-7 " /></a>}
+                                </span>
                             </div>
 
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="email">Email</Label>
-                                <Input id="email" placeholder="Name of your project" />
+                                <Input id="email" placeholder="Name of your project" value={email} onChange={handleOnChange} defaultValue='Enter' />
                             </div>
                         </div>
                     </form>
                 </CardContent>
                 <CardFooter className="flex items-center">
                     <Button
+                        id='generate-report'
                         type="button"
-                        onClick={(event) => { generateReportAndOpenModal(token, event); }}
-                        disabled={loading}
-                        className={`flex w-full items-center px-4 py-2 ${loading ? 'bg-green-500' : 'bg-black'} text-white rounded-lg text-base font-semibold
-                        hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black 
+                        onClick={(event) => { generateReportAndOpenModal(token, event, 'generate-report'); }}
+                        disabled={loading['generate-report'] ?? false}
+                        className={`flex w-full items-center px-4 py-2 text-white rounded-lg text-base font-semibold
+                        hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black dark:text-white
                         ${loading}`}>
-                        {loading ? 'loading...' : 'Generate Report'} <ArrowSmallRightIcon className="ml-2 h-4 w-4" />
+                        {loading['generate-report'] ?
+                            (<><Loader2 className="mr-2 h-4 w-4 animate-spin" /> <span>Generating...</span></>) :
+                            'Generate Report'
+                        }
+
                     </Button>
                 </CardFooter>
                 <CardFooter className="justify-between" >
-                        <Button
-                            disabled={isEmail(email) ? false : true}
-                            onClick={handleSendEmail}
-                            className="flex items-center  bg-black text-white p-1 px-2 rounded-lg text-base font-semibold
+                    <Button
+                        id='share-report'
+                        disabled={isEmail(email) ? false : true}
+                        onClick={() => handleSendEmail('share-report')}
+                    >
+                        {loading['share-report'] ?
+                            (<><Loader2 className="mr-2 h-4 w-4 animate-spin" /> <span>sending...</span></>) :
+                            <><Share2 className="mr-2 h-4 w-4" /><span>Email</span></>
+                        }
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            // requestOperation(report?.pdf);
+                        }}
+                        //   disabled={wallet ? false : true}
+                        className="flex items-center  bg-black text-white p-1 px-2 rounded-lg text-base font-semibold
                           hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black disabled:cursor-not-allowed disabled:opacity-75
                           "
-                        >
-                            <ShareIcon className="h-6 w-6 mr-3" /> Share
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                // requestOperation(report?.pdf);
-                            }}
-                            //   disabled={wallet ? false : true}
-                            className="flex items-center  bg-black text-white p-1 px-2 rounded-lg text-base font-semibold
-                          hover:bg-white hover:text-black border-2 border-solid border-transparent hover:border-black disabled:cursor-not-allowed disabled:opacity-75
-                          "
-                        >
-                            <Image src={TezosLogo} alt="Tezos logo" className="flex items justify-center h-6 w-6 mr-3" /> Tezos
-                        </Button>
-                        {/* {!wallet && <p className="text-red-500 text-sm">Please connect your wallet</p>} */}
-                  
+                    >
+                        <Image src={TezosLogo} alt="Tezos logo" className="flex items justify-center h-6 w-6 mr-3" /> Tezos
+                    </Button>
+                    {/* {!wallet && <p className="text-red-500 text-sm">Please connect your wallet</p>} */}
+
                 </CardFooter>
             </Card>
         </div>

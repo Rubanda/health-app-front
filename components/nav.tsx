@@ -13,7 +13,6 @@ interface DashboardNavProps {
 
 export function DashboardNav({ items }: DashboardNavProps) {
   const path = usePathname()
-  console.log('DashboardNav', items)
   if (!items?.length) {
     return null
   }

@@ -1,18 +1,21 @@
-import { getToken } from "next-auth/jwt";
-const secret = process.env.NEXTAUTH_SECRET
 
-export default async function fetchUser(req:any) {
-const token = await getToken({ req, secret })
+export default async function generateReport(token:string): Promise<string> {
+  let tenv = process.env.BACKEND_URL
+console.log('tenv',tenv)
 const response = await fetch(
-  `${process.env.BACKEND_URL}/api/user/me`,
+  `http://localhost:4000/api/user/pdf`,
   {
     method: "GET",
     headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + token?.token,
+        "Authorization": "Bearer " + token,
     },
   }
 );
-const profile = await response.json();
-return profile
+if (!response.ok) {
+  throw new Error(response.statusText);
+}
+const profile = await response.json() as { pdf: string };
+const report = profile.pdf
+return report
 }
