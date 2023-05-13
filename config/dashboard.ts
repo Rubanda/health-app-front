@@ -15,6 +15,17 @@ export const dashboardConfig: DashboardConfig = {
         {
             title: "Dashboard",
             href: "/dashboard",
+            icon: "dashboard",
+        },
+        {
+            title: "Location",
+            href: "/dashboard/map",
+            icon: "map",
+        },
+        {
+            title: "Report",
+            href: "/dashboard/report",
+            icon: "post",
         },
         {
             title: "Admin",

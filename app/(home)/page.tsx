@@ -5,9 +5,7 @@ import Image from "next/image"
 
 export default async function Home() {
     const user: any = await getCurrentUser()
-    if (!user) {
-        redirect("/dashboard")
-    }
+
     return (
         <>
             <div className='main'>
@@ -66,3 +64,5 @@ export default async function Home() {
         </>
     )
 }
+
+
