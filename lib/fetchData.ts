@@ -1,7 +1,6 @@
 
 export default async function generateReport(token:string): Promise<string> {
   let tenv = process.env.BACKEND_URL
-console.log('tenv',tenv)
 const response = await fetch(
   `http://localhost:4000/api/user/pdf`,
   {

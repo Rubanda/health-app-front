@@ -20,6 +20,7 @@ const onLoad = (marker: any) => {
 
 function MyComponent({ location }: any) {
   const payload = location[0]?.payload
+  console.log('[payload]', payload)
   const position = {
     lat: payload?.lat,
     lng: payload?.lng,

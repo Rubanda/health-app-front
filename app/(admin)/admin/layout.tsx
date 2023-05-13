@@ -1,6 +1,3 @@
-import { Suspense } from 'react'
-import Provider from '@/components/provider'
-import Toast from '@/components/toast'
 import { MainNav } from "@/components/main-nav"
 import { getCurrentUser } from '@/lib/session'
 import { notFound } from 'next/navigation'

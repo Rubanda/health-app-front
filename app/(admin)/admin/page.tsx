@@ -1,5 +1,6 @@
-import { ListUser } from '@/components/admin/list'
+import { TableDemo } from '@/components/admin/list'
 import { getCurrentUser } from '@/lib/session'
+import { redirect } from 'next/navigation'
 import React from 'react'
 
 async function getUser(token: string) {
@@ -12,18 +13,25 @@ async function getUser(token: string) {
             },
             cache: 'no-store'
         })
-    const json = await res.json()
-    return json
+    const allUsers = await res.json()
+    return allUsers
 }
 
 const Admin = async () => {
     const user: any = await getCurrentUser()
+    console.log('[user]', user)
     const token: string = user?.token
+    // if not admin redirect to dashboard
+    if (!user?.role.includes('SuperAdmin') || !user?.role.includes('doctor')) {
+        redirect('/dashboard')
 
-    const users = await getUser(token)
+    }
+    const allUsers = await getUser(token)
+    console.log('[allUsers]', allUsers)
     return (
         <>
-           <ListUser users={users}/>
+            <h1>Admin Page </h1>
+           <TableDemo allUsers={allUsers}/>
         </>
     )
 }
