@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker, Polyline } from '@react-google-maps/api';
 
 const containerStyle = {
   width: '100%',
@@ -12,18 +12,13 @@ const center = {
   lng: 33.322884
 };
 
-
-
-const onLoad = (marker: any) => {
-  // console.log('marker: ', marker)
-}
-
 function MyComponent({ location }: any) {
   const payload = location[0]?.payload
-  console.log('[payload]', payload)
   const position = {
-    lat: payload?.lat,
-    lng: payload?.lng,
+    lat: +payload?.lat,
+    lng: +payload?.lng,
+  };
+  const onLoad = (marker: any) => {
   }
   return (
     <LoadScript
@@ -35,22 +30,17 @@ function MyComponent({ location }: any) {
         zoom={10}
 
       >
-        { /* Child components, such as markers, info windows, etc. */}
-        <>
           <Marker
-            onLoad={onLoad}
             position={position}
+            onLoad={onLoad}
+            icon={{
+              url: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+            }}
+            // label={}
           />
-        </>
       </GoogleMap>
     </LoadScript>
   )
 }
 
 export default React.memo(MyComponent)
-
-
-//
-
-
-// user service

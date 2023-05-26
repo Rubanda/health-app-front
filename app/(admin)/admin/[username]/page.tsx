@@ -1,6 +1,12 @@
+import { DataCard } from "@/components/cards/data-card"
+import { DeviceCard } from "@/components/cards/device-card"
+import { SimpleCard } from "@/components/cards/simpleCard"
+import UserCard from "@/components/cards/user-card"
+import { Card } from "@/components/ui/card"
 import { getCurrentUser } from "@/lib/session"
 import { redirect } from "next/navigation"
-
+import LocationAdmin from "@/components/google-map-admin"
+import Link from "next/link"
 interface Props {
     params: { username: 'momo' }
 }
@@ -16,13 +22,12 @@ async function getAdminUser(token: string, username: string) {
             cache: 'no-store'
         })
     const userData = await res.json()
-    console.log('[res]', userData)
-
     return userData
 }
 
+
 const UserAdmin = async ({ params }: Props) => {
-    console.log('[searchParams]', params)
+    const {username} = params
     const user: any = await getCurrentUser()
     // if not admin redirect to dashboard
     if (!user?.role.includes('SuperAdmin') || !user?.role.includes('doctor')) {
@@ -30,9 +35,27 @@ const UserAdmin = async ({ params }: Props) => {
 
     }
     const token: string = user?.token
-    const userData = await getAdminUser(token, params.username)
+    const userData = await getAdminUser(token, username)
     return (
-        <div>User{userData.name}</div>
+        <>
+
+            <h3 className="text-lg space-y-3">Patient Details name: {userData.name}</h3>
+            <div className="flex flex-col flex-grow gap-3 lg:flex-row my-3">
+                <div className="flex-1 space-y-2">
+                    <UserCard user={userData} />
+                    <Card className="p-4 flex items-center">
+                        <SimpleCard type='metaMaskAddress' value={user?.tezos_address} />
+                    </Card>
+                </div>
+                <div className="flex-1">
+                    <DataCard vitals={userData?.vitals} />
+                </div>
+            </div>
+
+
+            <DeviceCard devices={userData?.devices} />
+            <Link href={`/admin/${username}/map`}>See Patient Location</Link>
+        </>
     )
 }
 

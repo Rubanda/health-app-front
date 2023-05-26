@@ -1,3 +1,6 @@
+import { ChevronDown } from "lucide-react"
+import { MailCheck } from "lucide-react"
+import { ChevronUp } from "lucide-react"
 import {
   AlertTriangle,
   ArrowRight,
@@ -25,6 +28,7 @@ import {
   Twitter,
   User,
   X,
+  ThermometerSun,
   type Icon as LucideIcon,
 } from "lucide-react"
 
@@ -36,6 +40,8 @@ export const Icons = {
   spinner: Loader2,
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
+  chevronUp: ChevronUp,
+  chevronDown: ChevronDown,
   trash: Trash,
   dashboard: LayoutDashboard,
   post: FileText,
@@ -54,6 +60,8 @@ export const Icons = {
   sun: SunMedium,
   moon: Moon,
   laptop: Laptop,
+  temperature: ThermometerSun,
+  email: MailCheck,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

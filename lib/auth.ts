@@ -7,7 +7,7 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                username: { label: "Username", type: "text", placeholder: "jsmith" },
+                username: { label: "username", type: "text", placeholder: "jsmith" },
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials, req) {
@@ -43,20 +43,10 @@ export const authOptions: NextAuthOptions = {
     },
     callbacks: {
         async jwt({ token, user }) {
-            const dbUser:any = token?.user;
-
-            // return {
-            //     id: dbUser.user.id,
-            //     name: dbUser?.user.name,
-            //     email: dbUser?.user?.email,
-            //     picture: dbUser?.user.avatar,
-            //     role: dbUser?.user.role,
-            //     token: token.token,
-                
-            //   }
             return { ...token,...user };
         },
         async session({ token, session }:any) {
+
             if (token) {
                 session.user.id = token?.user.id
                 session.user.name = token.user.name

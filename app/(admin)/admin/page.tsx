@@ -19,7 +19,7 @@ async function getUser(token: string) {
 
 const Admin = async () => {
     const user: any = await getCurrentUser()
-    console.log('[user]', user)
+    // console.log('[user]', user)
     const token: string = user?.token
     // if not admin redirect to dashboard
     if (!user?.role.includes('SuperAdmin') || !user?.role.includes('doctor')) {
@@ -27,7 +27,7 @@ const Admin = async () => {
 
     }
     const allUsers = await getUser(token)
-    console.log('[allUsers]', allUsers)
+    // console.log('[allUsers]', allUsers)
     return (
         <>
             <h1>Admin Page </h1>

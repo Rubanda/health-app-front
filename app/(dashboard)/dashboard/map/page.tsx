@@ -1,5 +1,6 @@
 
 import MyComponents from '@/components/google-map';
+import LocationAdmin from '@/components/google-map-admin';
 import { getCurrentUser } from '@/lib/session';
 
 async function getData(token: string) {
@@ -14,7 +15,7 @@ async function getData(token: string) {
   const res = await user.json()
   return res
 }
-export async function getLocation(token: string) {
+async function getLocation(token: string) {
   const user = await fetch(`${process.env.BACKEND_URL}/api/user/location`, {
     method: "GET",
     headers: {
