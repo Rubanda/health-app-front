@@ -62,6 +62,7 @@ export const Icons = {
   laptop: Laptop,
   temperature: ThermometerSun,
   email: MailCheck,
+  googleMap: Map,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

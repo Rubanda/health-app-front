@@ -39,17 +39,22 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
             >
               Dili
             </a>
-            {/* . The source code is available on{" "}
-            <a
-              href={siteConfig.links.github}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              GitHub
-            </a> */}
             .
+
           </p>
+        </div>
+        <div>
+        Special thanks to Professor{" "}
+
+          <a
+            href='mailto:fadi.alturjman@neu.edu.tr'
+            target="_blank"
+            rel="noreferrer"
+            className="font-medium underline underline-offset-4"
+          >
+            Prof. Dr. Fadi AL-TURJMAN
+          </a>
+          .
         </div>
         <ModeToggle />
       </div>

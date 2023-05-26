@@ -19,7 +19,24 @@ export default async function MarketingLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="container z-40 bg-background">
+      <div className="
+        absolute
+        top-0
+        left-0
+        w-full
+        h-96
+        bg-gradient-to-br
+        from-[#8EC5FC]
+        to-[#E0C3FC]
+        rounded-md
+        filter
+        blur-3xl
+        opacity-50
+        -z-50
+        dark:from-[#1A202C]
+    "
+      />
+      <header className="container z-40 ">
         <div className="flex h-20 items-center justify-between py-6">
           <MainNav />
           <nav>
