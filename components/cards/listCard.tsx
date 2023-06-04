@@ -30,7 +30,7 @@ export function CardListComponent(items: CardListProps) {
                 chartData={datas}
             />
 
-            <Card className="h-full">
+            <Card className="h-full drop-shadow-md border-none p-4">
                 <Flex className="flex flex-col md:flex-row">
 
                     <div>

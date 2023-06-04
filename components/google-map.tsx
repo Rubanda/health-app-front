@@ -22,7 +22,7 @@ function MyComponent({ location }: any) {
   }
   return (
     <LoadScript
-      googleMapsApiKey="AIzaSyB7cOlsmOT_ZFQq8t0OsR4OWHexPDbfhG8"
+      googleMapsApiKey="AIzaSyBJuXxmGpIbBHS8JFeuD4DRVm1I4EaOqzI"
     >
       <GoogleMap
         mapContainerStyle={containerStyle}

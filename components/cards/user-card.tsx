@@ -12,16 +12,16 @@ export default function UserCard({user}:any) {
     return (
         <>
 
-            <Card className=" p-4">
-                <CardHeader>
+            <Card className=" drop-shadow-md border-none p-4">
+                {/* <CardHeader>
                     <CardDescription><UserAvatar className="" user={{ image: user?.avatar }} /></CardDescription>
-                </CardHeader>
+                </CardHeader> */}
                 <CardContent className="gap-4">
                     <div>
                         <div className="mb-4 ">
                             {/* <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" /> */}
                             <div className="space-y-1">
-                                <p className="text-sm font-medium leading-none">
+                                <p className="text-lg font-bold leading-none">
                                     {user.name}
                                 </p>
                                 <p className="text-sm text-muted-foreground">

@@ -7,7 +7,7 @@ import UserCard from "@/components/cards/user-card";
 import { DeviceCard } from "@/components/cards/device-card";
 import { DataCard } from "@/components/cards/data-card";
 import { connectWallet, disconnectWallet, getActiveAccount } from "./beacon";
-import Toast from "@/components/toast";
+import TezosLogin from "@/components/login-tezos";
 // import { connectWallet, getActiveAccount, disconnectWallet, } from "./beacon";
 
 type Props = {
@@ -28,7 +28,6 @@ export default function GridCard({ data, token }: Props) {
 
     // Temple wallet
     const [wallet, setWallet] = useState<any>(null);
-    const [akord, setAkord] = useState<any>(null);
 
     const handleConnectWallet = async () => {
         const { wallet } = await connectWallet();
@@ -59,7 +58,7 @@ export default function GridCard({ data, token }: Props) {
 
 
                 <div className="flex flex-col flex-grow gap-2">
-                    <Card className="p-4 flex items-center">
+                    <Card className="drop-shadow-md border-none p-4 flex items-center">
                         <SimpleCard type='metaMaskAddress' value={user?.tezos_address} />
                     </Card>
 
@@ -69,11 +68,6 @@ export default function GridCard({ data, token }: Props) {
 
                 </div>
             </div>
-
-
-
-            <Toast wallet={wallet} handleConnectWallet={handleConnectWallet} handleDisconnectWallet={handleDisconnectWallet} />
-
         </>
     )
 }

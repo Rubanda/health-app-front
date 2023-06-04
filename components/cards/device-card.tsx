@@ -5,7 +5,7 @@ import { Icons } from '@/components/icons'
 export const DeviceCard = ({ devices }: any) => {
     return (
         <>
-            <Card className="">
+            <Card className="drop-shadow-md border-none p-4">
                 <CardHeader>
                     <CardTitle>My Device</CardTitle>
                     <CardDescription>turn them on or off</CardDescription>

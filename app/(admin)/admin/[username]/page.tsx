@@ -8,7 +8,7 @@ import { redirect } from "next/navigation"
 import LocationAdmin from "@/components/google-map-admin"
 import Link from "next/link"
 interface Props {
-    params: { username: 'momo' }
+    params: { username: string,patientName: string }
 }
 
 async function getAdminUser(token: string, username: string) {
@@ -24,10 +24,25 @@ async function getAdminUser(token: string, username: string) {
     const userData = await res.json()
     return userData
 }
+async function getCpanelUser(token: string, patientname: string) {
+        const  res = await fetch(`${process.env.BACKEND_URL}/api/user/cpanel/search?searchName=${patientname}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token,
+            },
+            cache: 'no-store'
+        })
+    const userCpanelData = await res.json()
+    console.log('[userCpanelData]', userCpanelData)
+    return userCpanelData
+}
 
 
 const UserAdmin = async ({ params }: Props) => {
     const {username} = params
+    console.log('[username]', params)
     const user: any = await getCurrentUser()
     // if not admin redirect to dashboard
     if (!user?.role.includes('SuperAdmin') || !user?.role.includes('doctor')) {
@@ -36,6 +51,7 @@ const UserAdmin = async ({ params }: Props) => {
     }
     const token: string = user?.token
     const userData = await getAdminUser(token, username)
+    const userDataCpanel = await getCpanelUser(token, username)
     return (
         <>
 

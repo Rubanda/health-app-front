@@ -2,9 +2,8 @@
 import { GenerateReport } from '@/components/generate-report';
 import { Card } from '@/components/ui/card';
 import { getCurrentUser } from '@/lib/session';
-import Image from 'next/image';
-import TezosLogo from "@/public/SVG/TezosLogo_Icon_Blue.svg"
 import { Prediction } from '@/components/prediction';
+import TezosLogin from '@/components/login-tezos';
 
 async function getTezos() {
   const res = await fetch('https://ainlife1.pythonanywhere.com/lr-xtz-prediction', { next: { revalidate: 10 } })
@@ -24,7 +23,8 @@ async function getData(token: string) {
   const res = await user.json()
   return res
 }
-export async function getReport(token: string, query: string) {
+async function getReport(token: string, query: string) {
+  'use server'
   const user = await fetch(`${process.env.BACKEND_URL}/api/user/search?attributes=["${query}"]`, {
     method: "GET",
     headers: {
@@ -38,18 +38,20 @@ export async function getReport(token: string, query: string) {
 
 export default async function GoogleMapPage() {
   const reportUrl = "reportUrl"
+
   const user: any = await getCurrentUser()
   const token: string = user?.token
   const userReport = await getReport(token, reportUrl)
   const tezosPrediction = await getTezos()
+
   return (
     <>
 
-      <div className='mx-0 flex flex-col items-center space-y-5 align-middle '>
+      <div className='mx-0 mb-3 flex flex-col items-center space-y-5 align-middle '>
         <Prediction tezosPrediction={tezosPrediction} />
         <GenerateReport token={token} reportUrl={userReport} user={user} />
       </div>
-
+      <TezosLogin />
     </>
   )
 }
