@@ -11,7 +11,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 export const Prediction = ({ tezosPrediction }: any) => {
     const [prediction, setPrediction] = React.useState<any>(false)
     const [advised, setAdvised] = React.useState<any>(false)
-    console.log('[tezosPrediction]', tezosPrediction)
     React.useEffect(() => {
         if (tezosPrediction?.xtz_predicted_price > tezosPrediction?.xtz_current_price) {
             setAdvised(true)

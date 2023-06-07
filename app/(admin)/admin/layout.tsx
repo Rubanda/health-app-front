@@ -10,13 +10,13 @@ export const metadata = {
   description: 'upload document to web3 storage',
 }
 
-export default async function DashboardLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const user = await getCurrentUser()
-  console.log('user', user)
+  console.log('[{user admin}]', !user)
   if (!user) {
     return notFound()
   }

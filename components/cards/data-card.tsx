@@ -22,7 +22,6 @@ export const DataCard = ({ vitals }: any) => {
     const bmi = structureData(vitals, 'bmi', 'bmi')
     const blood_pressure_diastole = structureData(vitals, 'blood_pressure_diastole', 'blood_pressure_diastole')
     const respiration = structureData(vitals, 'respiration', 'respiration_rate')
-    console.log({ heartData, oxygenData, bmi, blood_pressure_diastole, respiration })
     return (
         // <Card className=''>
         <>

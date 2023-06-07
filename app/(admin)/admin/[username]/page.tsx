@@ -5,7 +5,6 @@ import UserCard from "@/components/cards/user-card"
 import { Card } from "@/components/ui/card"
 import { getCurrentUser } from "@/lib/session"
 import { redirect } from "next/navigation"
-import LocationAdmin from "@/components/google-map-admin"
 import Link from "next/link"
 interface Props {
     params: { username: string,patientName: string }
@@ -35,14 +34,12 @@ async function getCpanelUser(token: string, patientname: string) {
             cache: 'no-store'
         })
     const userCpanelData = await res.json()
-    console.log('[userCpanelData]', userCpanelData)
     return userCpanelData
 }
 
 
 const UserAdmin = async ({ params }: Props) => {
     const {username} = params
-    console.log('[username]', params)
     const user: any = await getCurrentUser()
     // if not admin redirect to dashboard
     if (!user?.role.includes('SuperAdmin') || !user?.role.includes('doctor')) {

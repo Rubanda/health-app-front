@@ -47,7 +47,7 @@ export function CpanelUser({ patient }: Props) {
         console.log('[e.target.value]', e.target.value)
         setPatientName(e.target.value)
     }
-    console.log('[patient]', patientName)
+    // console.log('[patient]', patientName)
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         router.push(`/admin/${values.patientName}`)
     }
