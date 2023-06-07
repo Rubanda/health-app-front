@@ -33,7 +33,7 @@ async function getUserFromCpanel(token: string) {
 
 const Admin = async () => {
     const user: any = await getCurrentUser()
-    // console.log('[user]', user)
+    console.log('[user]::admin-->page"', user)
     const token: string = user?.token
     // if not admin redirect to dashboard
     if (!user?.role.includes('SuperAdmin') || !user?.role.includes('doctor')) {
