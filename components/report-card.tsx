@@ -65,12 +65,14 @@ export function CardWithForm({ token,user }: any) {
         setLoading((prevState) => ({ ...prevState, [buttonId]: false }));
     }
     const handleSendEmail = async (buttonId: string) => {
+        console.log('[email]', `https://health.masatafit.com/api/user/email?toEmail=${email}`)
         setLoading((prevState) => ({ ...prevState, [buttonId]: true }));
-        const report = await axios.post(`${process.env.BACKEND_URL}/api/user/email?toEmail=${email}`, {}, {
+        const report = await axios.post(`https://health.masatafit.com/api/user/email?toEmail=${email}`, {}, {
             headers: {
                 Authorization: 'Bearer ' + token
             }
         })
+        console.log('[report]', report)
         if (report.status === 200) {
             setEmail('')
         }
