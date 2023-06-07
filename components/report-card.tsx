@@ -66,7 +66,7 @@ export function CardWithForm({ token,user }: any) {
     }
     const handleSendEmail = async (buttonId: string) => {
         setLoading((prevState) => ({ ...prevState, [buttonId]: true }));
-        const report = await axios.post(`http://localhost:4000/api/user/email?toEmail=${email}`, {}, {
+        const report = await axios.post(`${process.env.BACKEND_URL}/api/user/email?toEmail=${email}`, {}, {
             headers: {
                 Authorization: 'Bearer ' + token
             }
