@@ -3,9 +3,10 @@ import { CpanelUser } from '@/components/admin/cpanel-user'
 import { getCurrentUser } from '@/lib/session'
 import { redirect } from 'next/navigation'
 import React from 'react'
-
+import { config } from '@/config/config'
 async function getUser(token: string) {
-    const res = await fetch(`${process.env.BACKEND_URL}/api/user`,
+    console.log('[backendurl]', config.backendUrl)
+    const res = await fetch(`${config.backendUrl}/api/user`,
         {
             method: "GET",
             headers: {
@@ -18,7 +19,7 @@ async function getUser(token: string) {
     return allUsers
 }
 async function getUserFromCpanel(token: string) {
-    const res = await fetch(`${process.env.BACKEND_URL}/api/user/cpanel/names`,
+    const res = await fetch(`${config.backendUrl}/api/user/cpanel/names`,
         {
             method: "GET",
             headers: {
