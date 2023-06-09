@@ -44,7 +44,12 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
           </p>
         </div>
         <div>
-        Special thanks to Professor{" "}
+          Special thanks to  <a
+            href='https://www.linkedin.com/in/natasha-hemed-4a5888212/'
+            target="_blank"
+            rel="noreferrer"
+            className="font-medium underline underline-offset-4"
+          >Tasha H</a> and Professor{" "}
 
           <a
             href='mailto:fadi.alturjman@neu.edu.tr'
